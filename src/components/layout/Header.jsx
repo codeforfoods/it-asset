@@ -2,7 +2,7 @@ import React from 'react';
 import { Search, Bell, PanelLeft, Sun, Moon } from 'lucide-react';
 import { useTheme } from '../ThemeProvider';
 
-export default function Header({ collapsed, onToggleSidebar }) {
+export default function Header({ collapsed, onToggleSidebar, searchQuery, onSearchChange }) {
   const { theme, setTheme } = useTheme();
 
   return (
@@ -22,6 +22,8 @@ export default function Header({ collapsed, onToggleSidebar }) {
           <input 
             type="text" 
             placeholder="Tìm kiếm thiết bị, model, IP..." 
+            value={searchQuery}
+            onChange={(e) => onSearchChange(e.target.value)}
             className="w-full h-9 bg-background/50 border border-transparent shadow-sm hover:border-border focus:bg-background focus:border-primary focus:ring-1 focus:ring-primary rounded-lg pl-9 pr-4 text-sm transition-all focus:outline-none placeholder:text-muted-foreground/60"
           />
         </div>

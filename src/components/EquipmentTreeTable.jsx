@@ -4,12 +4,13 @@ import {
   getCoreRowModel,
   getGroupedRowModel,
   getExpandedRowModel,
+  getFilteredRowModel,
   flexRender,
 } from '@tanstack/react-table';
 import { ChevronRight, ChevronDown, Edit, Trash2 } from 'lucide-react';
 import clsx from 'clsx';
 
-export default function EquipmentTreeTable({ data = [], onEdit, onDelete, userRole }) {
+export default function EquipmentTreeTable({ data = [], onEdit, onDelete, userRole, globalFilter }) {
   const [grouping, setGrouping] = useState(['unit', 'category', 'subCategory']);
   const [expanded, setExpanded] = useState(true);
 
@@ -85,11 +86,12 @@ export default function EquipmentTreeTable({ data = [], onEdit, onDelete, userRo
   const table = useReactTable({
     data,
     columns,
-    state: { grouping, expanded },
+    state: { grouping, expanded, globalFilter },
     onExpandedChange: setExpanded,
     getCoreRowModel: getCoreRowModel(),
     getGroupedRowModel: getGroupedRowModel(),
     getExpandedRowModel: getExpandedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
     autoResetExpanded: false,
     autoResetGrouping: false,
   });

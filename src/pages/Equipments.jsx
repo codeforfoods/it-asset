@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useOutletContext } from 'react-router-dom';
 import EquipmentTreeTable from '../components/EquipmentTreeTable';
 import EquipmentModal from '../components/EquipmentModal';
 import StatsCards from '../components/StatsCards';
@@ -8,6 +9,7 @@ import { useAuthStore } from '../store/authStore';
 
 export default function EquipmentsPage() {
   const { user } = useAuthStore();
+  const { searchQuery } = useOutletContext() || { searchQuery: '' };
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingEquipment, setEditingEquipment] = useState(null);
   const [data, setData] = useState([]);
@@ -104,7 +106,7 @@ export default function EquipmentsPage() {
           </div>
         </div>
       ) : (
-        <EquipmentTreeTable data={data} onEdit={handleEdit} onDelete={handleDelete} userRole={user?.role} />
+        <EquipmentTreeTable data={data} onEdit={handleEdit} onDelete={handleDelete} userRole={user?.role} globalFilter={searchQuery} />
       )}
       
       <EquipmentModal 
