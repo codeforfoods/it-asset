@@ -5,8 +5,7 @@ import clsx from 'clsx';
 
 const TABS = [
   { id: 'companies', label: 'Đơn vị', icon: Building2 },
-  { id: 'categories', label: 'Category', icon: Folders },
-  { id: 'device_types', label: 'Loại thiết bị', icon: Tag },
+  { id: 'categories', label: 'Nhóm thiết bị', icon: Folders },
   { id: 'locations', label: 'Vị trí', icon: MapPin },
   { id: 'license_statuses', label: 'Trạng thái License', icon: ShieldCheck },
 ];
@@ -332,7 +331,6 @@ export default function DictionaryAdmin() {
       <div className="flex-1 overflow-auto">
         {activeTab === 'companies' && <SimpleListTab tableName="companies" placeholder="Tên đơn vị mới..." />}
         {activeTab === 'categories' && <CategoriesTab />}
-        {activeTab === 'device_types' && <SimpleListTab tableName="device_types" placeholder="Tên loại thiết bị mới..." />}
         {activeTab === 'locations' && <SimpleListTab tableName="locations" placeholder="Tên vị trí mới..." />}
         {activeTab === 'license_statuses' && <LicenseStatusTab />}
       </div>

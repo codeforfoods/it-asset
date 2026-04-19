@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { X, Save, Loader2, ChevronLeft, ChevronRight, Calendar } from 'lucide-react';
+import { createPortal } from 'react-dom';
+import { X, Save, Loader2, ChevronLeft, ChevronRight, Calendar, Info } from 'lucide-react';
 import { createEquipment, updateEquipment } from '../services/equipmentService';
 
 const INITIAL_FORM = {
@@ -23,6 +24,98 @@ const INITIAL_FORM = {
 
 const MONTHS = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
 const MONTH_LABELS = ['Th1', 'Th2', 'Th3', 'Th4', 'Th5', 'Th6', 'Th7', 'Th8', 'Th9', 'Th10', 'Th11', 'Th12'];
+
+// ─── InfoTooltip ────────────────────────────────────────
+function InfoTooltip({ title, description, actions }) {
+  const [open, setOpen] = useState(false);
+  const [coords, setCoords] = useState({ x: 0, y: 0 });
+  const btnRef = useRef(null);
+
+  const updatePosition = () => {
+    if (btnRef.current) {
+      const rect = btnRef.current.getBoundingClientRect();
+      setCoords({
+        x: rect.left + rect.width / 2,
+        y: rect.top - 8, // 8px spacing above
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (open) {
+      updatePosition();
+      // Update on scroll of any parent container, or window resize
+      window.addEventListener('scroll', updatePosition, true);
+      window.addEventListener('resize', updatePosition);
+      return () => {
+        window.removeEventListener('scroll', updatePosition, true);
+        window.removeEventListener('resize', updatePosition);
+      };
+    }
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e) => {
+      // Close if click is outside both the button and the tooltip content
+      if (btnRef.current && !btnRef.current.contains(e.target) && !e.target.closest('.info-tooltip-content')) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [open]);
+
+  return (
+    <div 
+      className="relative inline-flex items-center ml-1.5"
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+    >
+      <button 
+        ref={btnRef}
+        type="button"
+        onClick={(e) => { e.preventDefault(); setOpen(!open); }}
+        className="text-muted-foreground hover:text-primary transition-colors focus:outline-none"
+      >
+        <Info className="w-4 h-4" />
+      </button>
+
+      {open && createPortal(
+        <div 
+          className="info-tooltip-content fixed z-[9999] w-[340px] bg-card border border-border shadow-xl rounded-xl p-4 text-left animate-in fade-in zoom-in-95 duration-200 cursor-default"
+          style={{ 
+            left: coords.x, 
+            top: coords.y,
+            transform: 'translate(-50%, -100%)' // Center horizontally, place entirely above the y coordinate
+          }}
+          onMouseEnter={() => setOpen(true)}
+          onMouseLeave={() => setOpen(false)}
+        >
+          <h4 className="font-bold text-foreground text-sm border-b border-border pb-2 mb-2 flex items-center gap-2">
+            <Info className="w-4 h-4 text-primary" />
+            {title}
+          </h4>
+          <p className="text-sm text-muted-foreground mb-3 leading-relaxed">{description}</p>
+          
+          <div className="space-y-3 text-sm">
+            {actions.map((act, idx) => (
+              <div key={idx} className="flex flex-col gap-0.5">
+                <span className="font-semibold text-foreground">{act.label}:</span>
+                <span className={act.danger ? "text-rose-600 dark:text-rose-400 font-medium leading-relaxed whitespace-pre-line" : "text-muted-foreground leading-relaxed whitespace-pre-line"}>
+                  {act.text}
+                </span>
+              </div>
+            ))}
+          </div>
+          {/* Arrow pointing down to the icon */}
+          <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-card border-b border-r border-border rotate-45"></div>
+        </div>,
+        document.body
+      )}
+    </div>
+  );
+}
 
 // ─── MonthYearPicker ────────────────────────────────────
 function MonthYearPicker({ value, onChange, label }) {
@@ -425,8 +518,41 @@ export default function EquipmentModal({ isOpen, onClose, equipment = null, look
 
             {/* Dòng 5: EOL, EOSS, EOLicense, License */}
             <div className="grid grid-cols-4 gap-4">
-              <MonthYearPicker label="EOL" value={form.eol_date} onChange={v => handleChange('eol_date', v)} />
-              <MonthYearPicker label="EOSS" value={form.eoss_date} onChange={v => handleChange('eoss_date', v)} />
+              <MonthYearPicker 
+                label={
+                  <div className="flex items-center whitespace-nowrap">
+                    End Of Life (EOL)
+                    <InfoTooltip 
+                      title="End of Life (EOL) - Kết thúc vòng đời sản phẩm"
+                      description="Đây là thông báo từ nhà sản xuất rằng họ ngừng sản xuất và bán model thiết bị đó ra thị trường."
+                      actions={[
+                        { label: 'Ý nghĩa', text: 'Bạn không thể mua mới thiết bị này từ hãng nữa. Tuy nhiên, thiết bị vẫn hoạt động bình thường nếu bạn đang sở hữu nó.' },
+                        { label: 'Hành động', text: 'Đây là "hồi chuông" đầu tiên nhắc bạn cần lên kế hoạch ngân sách để chuyển đổi sang dòng thiết bị mới trong 1-3 năm tới.' }
+                      ]}
+                    />
+                  </div>
+                } 
+                value={form.eol_date} 
+                onChange={v => handleChange('eol_date', v)} 
+              />
+              <MonthYearPicker 
+                label={
+                  <div className="flex items-center whitespace-nowrap">
+                    End Of Support (EOS)
+                    <InfoTooltip 
+                      title="End of Support (EOS) - Kết thúc hỗ trợ kỹ thuật"
+                      description="Đây là mốc thời gian quan trọng và nguy hiểm nhất đối với thiết bị bảo mật. Sau ngày này, nhà sản xuất sẽ ngừng mọi dịch vụ hỗ trợ."
+                      actions={[
+                        { label: 'Ý nghĩa', text: '• Không có bản vá lỗi (Patches) hoặc cập nhật phần mềm (Firmware).\n• Không có sự trợ giúp từ kỹ sư của hãng khi gặp sự cố.' },
+                        { label: 'Rủi ro', text: 'Nếu một lỗ hổng bảo mật mới (Zero-day) xuất hiện, thiết bị của bạn sẽ hoàn toàn bị phơi nhiễm vì không có bản vá.', danger: true },
+                        { label: 'Hành động', text: 'Bạn bắt buộc phải thay thế thiết bị trước khi mốc này đến để đảm bảo an toàn cho hệ thống.', danger: true }
+                      ]}
+                    />
+                  </div>
+                } 
+                value={form.eoss_date} 
+                onChange={v => handleChange('eoss_date', v)} 
+              />
               <MonthYearPicker label="EOLicense" value={form.eo_license} onChange={v => handleChange('eo_license', v)} />
               <div className="space-y-1.5">
                 <label className="text-sm font-medium text-foreground">License</label>

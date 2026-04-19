@@ -18,51 +18,51 @@ export default function EquipmentTreeTable({ data = [], onEdit, onDelete, userRo
   const columns = useMemo(() => {
     const baseColumns = [
       { header: 'Đơn vị', accessorKey: 'unit' },
-    { header: 'Category', accessorKey: 'category' },
-    { header: 'Nhóm Con', accessorKey: 'subCategory' },
-    { 
-      header: 'Loại thiết bị', 
-      accessorKey: 'deviceType',
-      cell: ({ row, getValue }) => row.getCanExpand() ? null : <span className="font-medium text-muted-foreground">{getValue()}</span>
-    },
-    { 
-      header: 'Model', 
-      accessorKey: 'model',
-      cell: ({ row, getValue }) => row.getCanExpand() ? null : <span className="font-semibold">{getValue()}</span>
-    },
-    { 
-      header: 'Địa chỉ IP', 
-      accessorKey: 'ipAddress',
-      cell: ({ row, getValue }) => row.getCanExpand() ? null : <span className="text-muted-foreground font-mono text-sm">{getValue()}</span>
-    },
-    { header: 'Số lượng', accessorKey: 'qty', aggregationFn: 'sum', aggregatedCell: ({ getValue }) => <span className="font-bold text-primary">{getValue()}</span> },
-    { header: 'Nhiệm vụ/ Chức năng', accessorKey: 'taskFunction', cell: ({ row, getValue }) => row.getCanExpand() ? null : <span className="text-muted-foreground">{getValue()}</span> },
-    { header: 'Vị trí', accessorKey: 'location', cell: ({ row, getValue }) => row.getCanExpand() ? null : getValue() },
-    { header: 'SL', accessorKey: 'qtySL', aggregationFn: 'sum', aggregatedCell: ({ getValue }) => <span className="font-bold text-primary">{getValue()}</span> },
-    { header: 'Chức năng', accessorKey: 'functionSD', cell: ({ row, getValue }) => row.getCanExpand() ? null : <span className="text-muted-foreground">{getValue()}</span> },
-    { header: 'Năm SD', accessorKey: 'yearInUse', cell: ({ row, getValue }) => row.getCanExpand() ? null : <span className="text-muted-foreground">{getValue()}</span> },
-    { header: 'EOL', accessorKey: 'eol', cell: ({ row, getValue }) => row.getCanExpand() ? null : <span className="text-muted-foreground">{getValue()}</span> },
-    { header: 'EOSS', accessorKey: 'eoss', cell: ({ row, getValue }) => row.getCanExpand() ? null : <span className="text-muted-foreground">{getValue()}</span> },
-    { header: 'EOLicense', accessorKey: 'eoLicense', cell: ({ row, getValue }) => row.getCanExpand() ? null : <span className="text-muted-foreground">{getValue()}</span> },
-    { 
-      header: 'License', 
-      accessorKey: 'license',
-      cell: ({ row, getValue }) => {
-        if (row.getCanExpand()) return null;
-        const val = getValue();
-        return (
-          <span className={clsx(
-            "px-2.5 py-1 rounded-md text-[11px] font-semibold border tracking-wide",
-            val === 'Support' ? "bg-emerald-100 text-emerald-800 border-emerald-200" 
-                              : "bg-rose-100 text-rose-800 border-rose-200"
-          )}>
-            {val?.toUpperCase()}
-          </span>
-        );
-      }
-    },
-    { header: 'Giai đoạn thay thế', accessorKey: 'replacePhase', cell: ({ row, getValue }) => row.getCanExpand() ? null : <span className="text-muted-foreground text-sm">{getValue()}</span> },
-    { header: 'Thiết bị thay thế', accessorKey: 'replace', cell: ({ row, getValue }) => row.getCanExpand() ? null : <span className="text-muted-foreground/70 text-sm truncate max-w-[120px] inline-block">{getValue()}</span> },
+      { header: 'Category', accessorKey: 'category' },
+      { header: 'Nhóm Con', accessorKey: 'subCategory' },
+      {
+        header: 'Loại thiết bị',
+        accessorKey: 'deviceType',
+        cell: ({ row, getValue }) => row.getCanExpand() ? null : <span className="font-medium text-muted-foreground">{getValue()}</span>
+      },
+      {
+        header: 'Model',
+        accessorKey: 'model',
+        cell: ({ row, getValue }) => row.getCanExpand() ? null : <span className="font-semibold">{getValue()}</span>
+      },
+      {
+        header: 'Địa chỉ IP',
+        accessorKey: 'ipAddress',
+        cell: ({ row, getValue }) => row.getCanExpand() ? null : <span className="text-muted-foreground font-mono text-sm">{getValue()}</span>
+      },
+      { header: 'Số lượng', accessorKey: 'qty', aggregationFn: 'sum', aggregatedCell: ({ getValue }) => <span className="font-bold text-primary">{getValue()}</span> },
+      { header: 'Nhiệm vụ/ Chức năng', accessorKey: 'taskFunction', cell: ({ row, getValue }) => row.getCanExpand() ? null : <span className="text-muted-foreground">{getValue()}</span> },
+      { header: 'Vị trí', accessorKey: 'location', cell: ({ row, getValue }) => row.getCanExpand() ? null : getValue() },
+      { header: 'SL', accessorKey: 'qtySL', aggregationFn: 'sum', aggregatedCell: ({ getValue }) => <span className="font-bold text-primary">{getValue()}</span> },
+      { header: 'Chức năng', accessorKey: 'functionSD', cell: ({ row, getValue }) => row.getCanExpand() ? null : <span className="text-muted-foreground">{getValue()}</span> },
+      { header: 'Năm SD', accessorKey: 'yearInUse', cell: ({ row, getValue }) => row.getCanExpand() ? null : <span className="text-muted-foreground">{getValue()}</span> },
+      { header: 'EOL', accessorKey: 'eol', cell: ({ row, getValue }) => row.getCanExpand() ? null : <span className="text-muted-foreground">{getValue()}</span> },
+      { header: 'EOS', accessorKey: 'eoss', cell: ({ row, getValue }) => row.getCanExpand() ? null : <span className="text-muted-foreground">{getValue()}</span> },
+      { header: 'EOLicense', accessorKey: 'eoLicense', cell: ({ row, getValue }) => row.getCanExpand() ? null : <span className="text-muted-foreground">{getValue()}</span> },
+      {
+        header: 'License',
+        accessorKey: 'license',
+        cell: ({ row, getValue }) => {
+          if (row.getCanExpand()) return null;
+          const val = getValue();
+          return (
+            <span className={clsx(
+              "px-2.5 py-1 rounded-md text-[11px] font-semibold border tracking-wide",
+              val === 'Support' ? "bg-emerald-100 text-emerald-800 border-emerald-200"
+                : "bg-rose-100 text-rose-800 border-rose-200"
+            )}>
+              {val?.toUpperCase()}
+            </span>
+          );
+        }
+      },
+      { header: 'Giai đoạn thay thế', accessorKey: 'replacePhase', cell: ({ row, getValue }) => row.getCanExpand() ? null : <span className="text-muted-foreground text-sm">{getValue()}</span> },
+      { header: 'Thiết bị thay thế', accessorKey: 'replace', cell: ({ row, getValue }) => row.getCanExpand() ? null : <span className="text-muted-foreground/70 text-sm truncate max-w-[120px] inline-block">{getValue()}</span> },
     ];
     if (userRole !== 'Manager') {
       baseColumns.push({
@@ -109,15 +109,15 @@ export default function EquipmentTreeTable({ data = [], onEdit, onDelete, userRo
               <th rowSpan={2} className="px-4 py-3 font-semibold text-white text-center align-middle border border-white/20 whitespace-nowrap">Model</th>
               <th rowSpan={2} className="px-4 py-3 font-semibold text-white text-center align-middle border border-white/20 whitespace-nowrap">Địa chỉ IP</th>
               <th rowSpan={2} className="px-4 py-3 font-semibold text-white text-center align-middle border border-white/20 whitespace-nowrap">Số lượng</th>
-              <th rowSpan={2} className="px-4 py-3 font-semibold text-white text-center align-middle border border-white/20 whitespace-nowrap">Nhiệm vụ/<br/>Chức năng</th>
+              <th rowSpan={2} className="px-4 py-3 font-semibold text-white text-center align-middle border border-white/20 whitespace-nowrap">Nhiệm vụ/<br />Chức năng</th>
               <th colSpan={3} className="px-4 py-3 font-semibold text-white text-center border border-white/20 whitespace-nowrap">Vị trí &amp; chức năng hiện tại</th>
               <th rowSpan={2} className="px-4 py-3 font-semibold text-white text-center align-middle border border-white/20 whitespace-nowrap">Năm SD</th>
               <th rowSpan={2} className="px-4 py-3 font-semibold text-white text-center align-middle border border-white/20 whitespace-nowrap">EOL</th>
-              <th rowSpan={2} className="px-4 py-3 font-semibold text-white text-center align-middle border border-white/20 whitespace-nowrap">EOSS</th>
+              <th rowSpan={2} className="px-4 py-3 font-semibold text-white text-center align-middle border border-white/20 whitespace-nowrap">EOS</th>
               <th rowSpan={2} className="px-4 py-3 font-semibold text-white text-center align-middle border border-white/20 whitespace-nowrap">EOLicense</th>
               <th rowSpan={2} className="px-4 py-3 font-semibold text-white text-center align-middle border border-white/20 whitespace-nowrap">License</th>
-              <th rowSpan={2} className="px-4 py-3 font-semibold text-white text-center align-middle border border-white/20 whitespace-nowrap">Giai đoạn<br/>thay thế</th>
-              <th rowSpan={2} className="px-4 py-3 font-semibold text-white text-center align-middle border border-white/20 whitespace-nowrap">Thiết bị<br/>thay thế</th>
+              <th rowSpan={2} className="px-4 py-3 font-semibold text-white text-center align-middle border border-white/20 whitespace-nowrap">Giai đoạn<br />thay thế</th>
+              <th rowSpan={2} className="px-4 py-3 font-semibold text-white text-center align-middle border border-white/20 whitespace-nowrap">Thiết bị<br />thay thế</th>
               {userRole !== 'Manager' && <th rowSpan={2} className="px-4 py-3 font-semibold text-white text-center align-middle border border-white/20 whitespace-nowrap sticky right-0 z-30" style={{ backgroundColor: 'rgb(22, 67, 151)' }}>Thao tác</th>}
             </tr>
             {/* Row 2: Sub-headers for "Vị trí & chức năng hiện tại" */}
@@ -131,10 +131,10 @@ export default function EquipmentTreeTable({ data = [], onEdit, onDelete, userRo
             {table.getRowModel().rows.map((row) => {
               const isGroup = row.getIsGrouped();
               const level = row.depth;
-              
+
               return (
-                <tr 
-                  key={row.id} 
+                <tr
+                  key={row.id}
                   className={clsx(
                     "group transition-colors",
                     isGroup && level === 0 ? "bg-indigo-50/60 hover:bg-indigo-50" : "",
@@ -143,7 +143,7 @@ export default function EquipmentTreeTable({ data = [], onEdit, onDelete, userRo
                     !isGroup ? "bg-card hover:bg-muted/30" : ""
                   )}
                 >
-                  <td 
+                  <td
                     className={clsx(
                       "px-5 py-3 sticky left-0 z-10 transition-all truncate min-w-[320px] max-w-[440px] shadow-[1px_0_0_0_hsl(var(--border))]",
                       isGroup && level === 0 ? "bg-indigo-50/60 group-hover:bg-indigo-50" : "",
@@ -169,19 +169,19 @@ export default function EquipmentTreeTable({ data = [], onEdit, onDelete, userRo
                           {row.getValue(row.groupingColumnId)} <span className="opacity-50 text-xs font-medium ml-1">({row.subRows.length})</span>
                         </span>
                       ) : (
-                         <span className="font-medium text-foreground text-[14px] truncate">{row.getValue('deviceType')}</span>
+                        <span className="font-medium text-foreground text-[14px] truncate">{row.getValue('deviceType')}</span>
                       )}
                     </div>
                   </td>
-                  
+
                   {row.getVisibleCells().map(cell => {
                     if (cell.column.id === 'unit' || cell.column.id === 'category' || cell.column.id === 'subCategory' || cell.column.id === 'deviceType') return null;
-                    
+
                     const isActions = cell.column.id === 'actions';
 
                     return (
-                      <td 
-                        key={cell.id} 
+                      <td
+                        key={cell.id}
                         className={clsx(
                           "px-4 py-3 whitespace-nowrap",
                           isActions ? "sticky right-0 z-10 shadow-[-1px_0_0_0_hsl(var(--border))]" : "",
